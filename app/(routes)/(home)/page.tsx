@@ -1,8 +1,50 @@
+"use client";
 import { TreePalm } from "lucide-react";
-import { LinkProfile } from "./components";
+import { HandlerSteps, LinkProfile } from "./components";
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { Link, User } from "@prisma/client";
+import { LoaderProfile } from "@/components/shared";
+import { StepConfigUserProvider } from "@/contexts";
 
 
 export default function HomePage() {
+  const { user } = useUser()
+  const [isFirstVisit, setIsFirstVisit] = useState(false)
+  const [reload, setReload] = useState(false)
+  const [infoUser, setInfoUser] = useState<(User & { links: Link[] }) | null>(
+    null
+  )
+
+  useEffect(() => {
+    const CheckFirstLogin = async () => {
+      const response = await fetch("/api/info-user")
+      const data = await response.json()
+      setInfoUser(data)
+      setIsFirstVisit(data.firstLogin)
+      console.log({ data })
+    }
+
+    CheckFirstLogin()
+
+    if (reload) {
+      CheckFirstLogin();
+      setReload(false)
+    }
+
+  }, [user?.id, reload, user])
+
+  if (!user || !infoUser) {
+    return <LoaderProfile />
+  }
+
+  if (isFirstVisit) {
+    return (
+      <StepConfigUserProvider>
+        <HandlerSteps onReload={setReload} />
+      </StepConfigUserProvider>
+    )
+  }
 
   return (
     <div>
