@@ -20,6 +20,7 @@ import { ArrowLeft } from "lucide-react";
 import { StepOne } from "../StepOne";
 import { StepTwo } from "../StepTwo";
 import { StepThree } from "../StepThree";
+import { StepFour } from "../StepFour";
 
 
 export function HandlerSteps(props: HandlerStepsProps) {
@@ -58,7 +59,7 @@ export function HandlerSteps(props: HandlerStepsProps) {
               {step === 1 && <StepOne />}
               {step === 2 && <StepTwo />}
               {step === 3 && <StepThree />}
-              {step === 4 && (<p>Step four</p>)}
+              {step === 4 && <StepFour />}
               {step === 5 && (<p>Step five</p>)}
             </div>
           </AlertDialogDescription>
